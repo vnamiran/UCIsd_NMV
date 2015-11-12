@@ -1,0 +1,67 @@
+/*
+*
+* main (Basic_LED_1)
+* 
+*
+*/
+
+#include "usbstk5515.h"
+#include "usbstk5515_led.h"
+#include "stdio.h"
+
+Int16 uled_test(void);
+
+int main(void)
+{
+	if(uled_test())
+	{
+		printf("Test Failed\n");
+	}
+	else
+	{
+		printf("Test Passed\n");
+	}
+	return 0;
+}
+
+Int16 uled_test(void)
+{
+	int i,j;
+	SYS_EXBUSSEL = 0x6000;  // Enable user LEDs on external bus
+    USBSTK5515_ULED_init( );
+    
+//	/* Initialize LED Module */
+//	USBSTK5515_LED_init();
+	
+	/* Random LED test */
+	for (i = 0; i < 24; i++)
+	{
+		if ( USBSTK5515_ULED_on( i%4 ) )  // Turn on user LED i
+               return 1;
+        USBSTK5515_waitusec( 250000 );
+        
+        if ( USBSTK5515_ULED_off( i%4 ) )  // Turn on user LED i
+               return 1;
+        USBSTK5515_waitusec( 250000 );
+	}
+	/* Running LED test */
+    /*for ( j = 0 ; j < 6 ; j++ )
+    {
+        for ( i = 0 ; i < 4 ; i++ )
+        {
+            if ( USBSTK5515_ULED_on( i ) )  // Turn on user LED i
+                return 1;
+            USBSTK5515_waitusec( 250000 );
+        }
+        
+        for ( i = 0 ; i < 4 ; i++ )
+        {
+            if ( USBSTK5515_ULED_off( i ) ) // Turn off user LED i
+                return 2;
+            USBSTK5515_waitusec( 250000 );
+        }
+    }*/
+    USBSTK5515_ULED_setall( 0x00 );
+	
+	return 0;
+}
